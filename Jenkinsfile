@@ -14,10 +14,11 @@ pipeline {
       }
       steps {
         script {
-          docker.withServer("hwws.dima5.ru")
-          app = docker.build("dpyzhov/train-schedule")
-          app.inside {
-            sh 'echo $(curl localhost:8080)'
+          docker.withServer(docker_host) {
+            app = docker.build("dpyzhov/train-schedule")
+            app.inside {
+              sh 'echo $(curl localhost:8080)'
+            }
           }
         }
       }
@@ -28,9 +29,11 @@ pipeline {
       }
       steps {
         script {
-          docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
-            app.push("${env.BUILD_NUMBER}")
-            app.push("latest")
+          docker.withServer(docker_host) {
+            docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
+              app.push("${env.BUILD_NUMBER}")
+              app.push("latest")
+            }
           }
         }
       }
