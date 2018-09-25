@@ -14,11 +14,9 @@ pipeline {
       }
       steps {
         script {
-          docker.withServer(docker_host) {
-            app = docker.build("dpyzhov/train-schedule")
-            app.inside {
-              sh 'echo $(curl localhost:8080)'
-            }
+          app = docker.build("dpyzhov/train-schedule")
+          app.inside {
+            sh 'echo $(curl localhost:8080)'
           }
         }
       }
@@ -29,11 +27,9 @@ pipeline {
       }
       steps {
         script {
-          docker.withServer(docker_host) {
-            docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
-              app.push("${env.BUILD_NUMBER}")
-              app.push("latest")
-            }
+          docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
+            app.push("${env.BUILD_NUMBER}")
+            app.push("latest")
           }
         }
       }
