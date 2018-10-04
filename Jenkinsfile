@@ -37,11 +37,11 @@ pipeline {
         }
       }
     }
-    stage('CanaryDeploy') {
+    stage('Canary Deploy') {
       when {
         branch 'master'
       }
-      environment { 
+      environment {
         CANARY_REPLICAS = 1
       }
       steps {
@@ -52,9 +52,12 @@ pipeline {
         )
       }
     }
-    stage('DeployToProduction') {
+    stage('Deploy To Production') {
       when {
         branch 'master'
+      }
+      environment {
+        CANARY_REPLICAS = 0
       }
       steps {
         input 'Deploy to Production?'
